@@ -1,7 +1,10 @@
+import 'package:exemplo/data/task_inherited.dart';
 import 'package:flutter/material.dart';
 
 class FormScreen extends StatefulWidget {
-  const FormScreen({super.key});
+  const FormScreen({super.key, required this.taskContext});
+
+  final BuildContext taskContext;
 
   @override
   State<FormScreen> createState() => _FormScreenState();
@@ -40,8 +43,8 @@ class _FormScreenState extends State<FormScreen> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: TextFormField(
-                        validator: (String? value){
-                          if(value != null && value.isEmpty){
+                        validator: (String? value) {
+                          if (value != null && value.isEmpty) {
                             return 'Insira o nome da Tarefa';
                           }
                           return null;
@@ -52,7 +55,10 @@ class _FormScreenState extends State<FormScreen> {
                           filled: true,
                           fillColor: Colors.white70,
                           enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.orange, width: 2),
+                            borderSide: BorderSide(
+                              color: Colors.orange,
+                              width: 2,
+                            ),
                           ),
                           focusedBorder: UnderlineInputBorder(
                             borderSide: BorderSide(
@@ -66,10 +72,10 @@ class _FormScreenState extends State<FormScreen> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: TextFormField(
-                        validator: (value){
-                          if(value!.isEmpty
-                              || int.parse(value) > 5
-                              || int.parse(value) < 1){
+                        validator: (value) {
+                          if (value!.isEmpty ||
+                              int.parse(value) > 5 ||
+                              int.parse(value) < 1) {
                             return 'Insira uma dificuldade entre 1 e 5';
                           }
                           return null;
@@ -81,7 +87,10 @@ class _FormScreenState extends State<FormScreen> {
                           filled: true,
                           fillColor: Colors.white70,
                           enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.orange, width: 2),
+                            borderSide: BorderSide(
+                              color: Colors.orange,
+                              width: 2,
+                            ),
                           ),
                           focusedBorder: UnderlineInputBorder(
                             borderSide: BorderSide(
@@ -98,8 +107,8 @@ class _FormScreenState extends State<FormScreen> {
                         onChanged: (text) {
                           setState(() {});
                         },
-                        validator: (value){
-                          if(value!.isEmpty){
+                        validator: (value) {
+                          if (value!.isEmpty) {
                             return 'Insira uma URL de imagem';
                           }
                           return null;
@@ -111,7 +120,10 @@ class _FormScreenState extends State<FormScreen> {
                           filled: true,
                           fillColor: Colors.white70,
                           enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.orange, width: 2),
+                            borderSide: BorderSide(
+                              color: Colors.orange,
+                              width: 2,
+                            ),
                           ),
                           focusedBorder: UnderlineInputBorder(
                             borderSide: BorderSide(
@@ -135,7 +147,11 @@ class _FormScreenState extends State<FormScreen> {
                         borderRadius: BorderRadius.circular(6),
                         child: Image.network(
                           imageController.text,
-                          errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                          errorBuilder: (
+                            BuildContext context,
+                            Object exception,
+                            StackTrace? stackTrace,
+                          ) {
                             return const Icon(
                               Icons.broken_image,
                               size: 48,
@@ -149,6 +165,11 @@ class _FormScreenState extends State<FormScreen> {
                     ElevatedButton(
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
+                          TaskInherited.of(widget.taskContext).newTask(
+                            nameController.text,
+                            imageController.text,
+                            int.parse(difficultyController.text),
+                          );
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text('Tarefa adicionada com sucesso!'),
@@ -158,11 +179,14 @@ class _FormScreenState extends State<FormScreen> {
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              content: Text('Por favor, corrija os erros do formulário.'),
+                              content: Text(
+                                'Por favor, corrija os erros do formulário.',
+                              ),
                               backgroundColor: Colors.red,
                             ),
                           );
                         }
+                        Navigator.pop(context);
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.orange,
@@ -170,7 +194,10 @@ class _FormScreenState extends State<FormScreen> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        padding: EdgeInsets.symmetric(horizontal: 36, vertical: 18),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 36,
+                          vertical: 18,
+                        ),
                       ),
                       child: Text('Adicionar'),
                     ),
